@@ -1,0 +1,6 @@
+{
+  "name": "ds",
+  "connector": "memory",
+  "localStorage": "SecretKey1!",
+  "file": "./data/ds.json"
+}

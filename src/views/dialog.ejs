@@ -1,0 +1,26 @@
+<%- include('header'); -%>
+<form class="form-signin" action="/oauth/authorize/decision" method="POST">
+  <h1 class="h3 mb-3 font-weight-normal">Authorise</h1>
+  <p>Hi <%= user.displayName %>!</p>
+  <p><b><%= rclient.name %></b> is requesting access to your account.</p>
+  <p>Do you approve?</p>
+  <input name="transaction_id" type="hidden" value="<%= transactionId %>" />
+  <button
+    class="btn btn-lg btn-primary"
+    type="submit"
+    value="Allow"
+    id="allow"
+  >
+    Allow
+  </button>
+  <button
+    class="btn btn-lg btn-danger"
+    type="submit"
+    value="Deny"
+    id="deny"
+    name="Cancel"
+  >
+    Deny
+  </button>
+  </form>
+  <%- include('header'); -%>

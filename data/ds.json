@@ -1,0 +1,8 @@
+{
+  "models": {
+    "User": {},
+    "Client": {},
+    "Code": {},
+    "Token": {}
+  }
+}
