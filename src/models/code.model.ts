@@ -5,7 +5,7 @@ export class Code extends Entity {
   @property({
     type: 'string',
     id: true,
-    generated: true,
+    defaultFn: 'uuidv4',
   })
   id?: string;
 
@@ -32,7 +32,6 @@ export class Code extends Entity {
     required: true,
   })
   value: string;
-
 
   constructor(data?: Partial<Code>) {
     super(data);

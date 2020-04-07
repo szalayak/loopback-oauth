@@ -5,7 +5,7 @@ export class Token extends Entity {
   @property({
     type: 'string',
     id: true,
-    generated: true,
+    defaultFn: 'uuidv4',
   })
   id?: string;
 
@@ -26,7 +26,6 @@ export class Token extends Entity {
     required: true,
   })
   value: string;
-
 
   constructor(data?: Partial<Token>) {
     super(data);

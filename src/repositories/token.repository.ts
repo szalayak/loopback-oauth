@@ -8,9 +8,7 @@ export class TokenRepository extends DefaultCrudRepository<
   typeof Token.prototype.id,
   TokenRelations
 > {
-  constructor(
-    @inject('datasources.ds') dataSource: DsDataSource,
-  ) {
+  constructor(@inject('datasources.ds') dataSource: DsDataSource) {
     super(Token, dataSource);
   }
 }

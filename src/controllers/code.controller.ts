@@ -23,7 +23,7 @@ import {CodeRepository} from '../repositories';
 export class CodeController {
   constructor(
     @repository(CodeRepository)
-    public codeRepository : CodeRepository,
+    public codeRepository: CodeRepository,
   ) {}
 
   @post('/codes', {
@@ -80,7 +80,8 @@ export class CodeController {
     },
   })
   async find(
-    @param.query.object('filter', getFilterSchemaFor(Code)) filter?: Filter<Code>,
+    @param.query.object('filter', getFilterSchemaFor(Code))
+    filter?: Filter<Code>,
   ): Promise<Code[]> {
     return this.codeRepository.find(filter);
   }
@@ -121,7 +122,8 @@ export class CodeController {
   })
   async findById(
     @param.path.string('id') id: string,
-    @param.query.object('filter', getFilterSchemaFor(Code)) filter?: Filter<Code>
+    @param.query.object('filter', getFilterSchemaFor(Code))
+    filter?: Filter<Code>,
   ): Promise<Code> {
     return this.codeRepository.findById(id, filter);
   }

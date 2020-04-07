@@ -1,5 +1,5 @@
 import {Client} from '@loopback/testlab';
-import {LoopbackOauthApplication} from '../..';
+import {LoopbackOauthApplication} from '../../application';
 import {setupApplication} from './test-helper';
 
 describe('HomePage', () => {

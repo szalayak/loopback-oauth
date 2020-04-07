@@ -5,7 +5,7 @@ export class Client extends Entity {
   @property({
     type: 'string',
     id: true,
-    generated: true,
+    defaultFn: 'uuidv4',
   })
   id?: string;
 
@@ -35,11 +35,9 @@ export class Client extends Entity {
 
   @property({
     type: 'boolean',
-    required: true,
     default: false,
   })
   isTrusted: boolean;
-
 
   constructor(data?: Partial<Client>) {
     super(data);

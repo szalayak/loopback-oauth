@@ -5,7 +5,7 @@ export class User extends Entity {
   @property({
     type: 'string',
     id: true,
-    generated: true,
+    defaultFn: 'uuidv4',
   })
   id?: string;
 
@@ -35,11 +35,9 @@ export class User extends Entity {
 
   @property({
     type: 'boolean',
-    required: true,
     default: false,
   })
   isAdmin: boolean;
-
 
   constructor(data?: Partial<User>) {
     super(data);

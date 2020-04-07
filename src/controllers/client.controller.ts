@@ -23,7 +23,7 @@ import {ClientRepository} from '../repositories';
 export class ClientController {
   constructor(
     @repository(ClientRepository)
-    public clientRepository : ClientRepository,
+    public clientRepository: ClientRepository,
   ) {}
 
   @post('/clients', {
@@ -59,7 +59,8 @@ export class ClientController {
     },
   })
   async count(
-    @param.query.object('where', getWhereSchemaFor(Client)) where?: Where<Client>,
+    @param.query.object('where', getWhereSchemaFor(Client))
+    where?: Where<Client>,
   ): Promise<Count> {
     return this.clientRepository.count(where);
   }
@@ -80,7 +81,8 @@ export class ClientController {
     },
   })
   async find(
-    @param.query.object('filter', getFilterSchemaFor(Client)) filter?: Filter<Client>,
+    @param.query.object('filter', getFilterSchemaFor(Client))
+    filter?: Filter<Client>,
   ): Promise<Client[]> {
     return this.clientRepository.find(filter);
   }
@@ -102,7 +104,8 @@ export class ClientController {
       },
     })
     client: Client,
-    @param.query.object('where', getWhereSchemaFor(Client)) where?: Where<Client>,
+    @param.query.object('where', getWhereSchemaFor(Client))
+    where?: Where<Client>,
   ): Promise<Count> {
     return this.clientRepository.updateAll(client, where);
   }
@@ -121,7 +124,8 @@ export class ClientController {
   })
   async findById(
     @param.path.string('id') id: string,
-    @param.query.object('filter', getFilterSchemaFor(Client)) filter?: Filter<Client>
+    @param.query.object('filter', getFilterSchemaFor(Client))
+    filter?: Filter<Client>,
   ): Promise<Client> {
     return this.clientRepository.findById(id, filter);
   }

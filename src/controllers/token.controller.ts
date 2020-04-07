@@ -23,7 +23,7 @@ import {TokenRepository} from '../repositories';
 export class TokenController {
   constructor(
     @repository(TokenRepository)
-    public tokenRepository : TokenRepository,
+    public tokenRepository: TokenRepository,
   ) {}
 
   @post('/tokens', {
@@ -80,7 +80,8 @@ export class TokenController {
     },
   })
   async find(
-    @param.query.object('filter', getFilterSchemaFor(Token)) filter?: Filter<Token>,
+    @param.query.object('filter', getFilterSchemaFor(Token))
+    filter?: Filter<Token>,
   ): Promise<Token[]> {
     return this.tokenRepository.find(filter);
   }
@@ -121,7 +122,8 @@ export class TokenController {
   })
   async findById(
     @param.path.string('id') id: string,
-    @param.query.object('filter', getFilterSchemaFor(Token)) filter?: Filter<Token>
+    @param.query.object('filter', getFilterSchemaFor(Token))
+    filter?: Filter<Token>,
   ): Promise<Token> {
     return this.tokenRepository.findById(id, filter);
   }

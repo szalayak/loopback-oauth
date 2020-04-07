@@ -1,4 +1,4 @@
-import {LoopbackOauthApplication} from '../..';
+import {LoopbackOauthApplication} from '../../application';
 import {
   createRestAppClient,
   givenHttpServerConfig,
