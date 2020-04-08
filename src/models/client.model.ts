@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import { Entity, model, property } from '@loopback/repository';
+import bcrypt from 'bcrypt';
 
 @model()
 export class Client extends Entity {
@@ -42,6 +43,11 @@ export class Client extends Entity {
   constructor(data?: Partial<Client>) {
     super(data);
   }
+
+  async verifySecret(clientSecret: string) {
+    return bcrypt.compare(clientSecret, this.clientSecret);
+  }
+
 }
 
 export interface ClientRelations {

@@ -16,21 +16,23 @@ import {
   put,
   del,
   requestBody,
+  HttpErrors,
 } from '@loopback/rest';
-import {Client} from '../models';
-import {ClientRepository} from '../repositories';
+import { Client } from '../models';
+import { ClientRepository } from '../repositories';
+import bcrypt from 'bcrypt';
 
 export class ClientController {
   constructor(
     @repository(ClientRepository)
     public clientRepository: ClientRepository,
-  ) {}
+  ) { }
 
   @post('/clients', {
     responses: {
       '200': {
         description: 'Client model instance',
-        content: {'application/json': {schema: getModelSchemaRef(Client)}},
+        content: { 'application/json': { schema: getModelSchemaRef(Client) } },
       },
     },
   })
@@ -47,14 +49,14 @@ export class ClientController {
     })
     client: Omit<Client, 'id'>,
   ): Promise<Client> {
-    return this.clientRepository.create(client);
+    return this.clientRepository.create({ ...client, clientSecret: bcrypt.hashSync(client.clientSecret, 10) });
   }
 
   @get('/clients/count', {
     responses: {
       '200': {
         description: 'Client model count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -73,7 +75,7 @@ export class ClientController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(Client, {includeRelations: true}),
+              items: getModelSchemaRef(Client, { includeRelations: true }),
             },
           },
         },
@@ -91,7 +93,7 @@ export class ClientController {
     responses: {
       '200': {
         description: 'Client PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -99,7 +101,7 @@ export class ClientController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Client, {partial: true}),
+          schema: getModelSchemaRef(Client, { partial: true }),
         },
       },
     })
@@ -107,7 +109,7 @@ export class ClientController {
     @param.query.object('where', getWhereSchemaFor(Client))
     where?: Where<Client>,
   ): Promise<Count> {
-    return this.clientRepository.updateAll(client, where);
+    return this.clientRepository.updateAll({ ...client, clientSecret: client.clientSecret ? bcrypt.hashSync(client.clientSecret, 10) : undefined }, where);
   }
 
   @get('/clients/{id}', {
@@ -116,7 +118,7 @@ export class ClientController {
         description: 'Client model instance',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(Client, {includeRelations: true}),
+            schema: getModelSchemaRef(Client, { includeRelations: true }),
           },
         },
       },
@@ -128,6 +130,30 @@ export class ClientController {
     filter?: Filter<Client>,
   ): Promise<Client> {
     return this.clientRepository.findById(id, filter);
+  }
+
+  @get('/clients/{clientId}', {
+    responses: {
+      '200': {
+        description: 'Client model instance',
+        content: {
+          'application/json': {
+            schema: getModelSchemaRef(Client, { includeRelations: true }),
+          },
+        },
+      },
+    },
+  })
+  async findByClientId(
+    @param.path.string('clientId') clientId: string,
+    @param.query.object('filter', getFilterSchemaFor(Client))
+    filter?: Filter<Client>,
+  ): Promise<Client> {
+    const client = await this.clientRepository.findOne({ where: { clientId: clientId } });
+    if (!client) {
+      throw new HttpErrors.NotFound(`Client with clientId ${clientId} does not exist`);
+    }
+    return client;
   }
 
   @patch('/clients/{id}', {
@@ -142,13 +168,13 @@ export class ClientController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Client, {partial: true}),
+          schema: getModelSchemaRef(Client, { partial: true }),
         },
       },
     })
     client: Client,
   ): Promise<void> {
-    await this.clientRepository.updateById(id, client);
+    await this.clientRepository.updateById(id, { ...client, clientSecret: client.clientSecret ? bcrypt.hashSync(client.clientSecret, 10) : undefined });
   }
 
   @put('/clients/{id}', {
@@ -162,7 +188,7 @@ export class ClientController {
     @param.path.string('id') id: string,
     @requestBody() client: Client,
   ): Promise<void> {
-    await this.clientRepository.replaceById(id, client);
+    await this.clientRepository.replaceById(id, { ...client, clientSecret: client.clientSecret ? bcrypt.hashSync(client.clientSecret, 10) : undefined });
   }
 
   @del('/clients/{id}', {

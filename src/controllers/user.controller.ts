@@ -17,20 +17,21 @@ import {
   del,
   requestBody,
 } from '@loopback/rest';
-import {User} from '../models';
-import {UserRepository} from '../repositories';
+import { User } from '../models';
+import { UserRepository } from '../repositories';
+import bcrypt from 'bcrypt';
 
 export class UserController {
   constructor(
     @repository(UserRepository)
     public userRepository: UserRepository,
-  ) {}
+  ) { }
 
   @post('/users', {
     responses: {
       '200': {
         description: 'User model instance',
-        content: {'application/json': {schema: getModelSchemaRef(User)}},
+        content: { 'application/json': { schema: getModelSchemaRef(User) } },
       },
     },
   })
@@ -47,14 +48,14 @@ export class UserController {
     })
     user: Omit<User, 'id'>,
   ): Promise<User> {
-    return this.userRepository.create(user);
+    return this.userRepository.create({ ...user, password: bcrypt.hashSync(user.password, 10) });
   }
 
   @get('/users/count', {
     responses: {
       '200': {
         description: 'User model count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -72,7 +73,7 @@ export class UserController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(User, {includeRelations: true}),
+              items: getModelSchemaRef(User, { includeRelations: true }),
             },
           },
         },
@@ -90,7 +91,7 @@ export class UserController {
     responses: {
       '200': {
         description: 'User PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -98,14 +99,14 @@ export class UserController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(User, {partial: true}),
+          schema: getModelSchemaRef(User, { partial: true }),
         },
       },
     })
     user: User,
     @param.query.object('where', getWhereSchemaFor(User)) where?: Where<User>,
   ): Promise<Count> {
-    return this.userRepository.updateAll(user, where);
+    return this.userRepository.updateAll({ ...user, password: user.password ? bcrypt.hashSync(user.password, 10) : undefined }, where);
   }
 
   @get('/users/{id}', {
@@ -114,7 +115,7 @@ export class UserController {
         description: 'User model instance',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(User, {includeRelations: true}),
+            schema: getModelSchemaRef(User, { includeRelations: true }),
           },
         },
       },
@@ -140,13 +141,13 @@ export class UserController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(User, {partial: true}),
+          schema: getModelSchemaRef(User, { partial: true }),
         },
       },
     })
     user: User,
   ): Promise<void> {
-    await this.userRepository.updateById(id, user);
+    await this.userRepository.updateById(id, { ...user, password: user.password ? bcrypt.hashSync(user.password, 10) : undefined });
   }
 
   @put('/users/{id}', {
@@ -160,7 +161,7 @@ export class UserController {
     @param.path.string('id') id: string,
     @requestBody() user: User,
   ): Promise<void> {
-    await this.userRepository.replaceById(id, user);
+    await this.userRepository.replaceById(id, { ...user, password: user.password ? bcrypt.hashSync(user.password, 10) : undefined });
   }
 
   @del('/users/{id}', {
