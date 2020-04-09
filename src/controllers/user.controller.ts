@@ -16,6 +16,7 @@ import {
   put,
   del,
   requestBody,
+  HttpErrors,
 } from '@loopback/rest';
 import { User } from '../models';
 import { UserRepository } from '../repositories';
@@ -48,7 +49,10 @@ export class UserController {
     })
     user: Omit<User, 'id'>,
   ): Promise<User> {
-    return this.userRepository.create({ ...user, password: bcrypt.hashSync(user.password, 10) });
+    return this.userRepository.create({
+      ...user,
+      password: bcrypt.hashSync(user.password, 10),
+    });
   }
 
   @get('/users/count', {
@@ -106,7 +110,15 @@ export class UserController {
     user: User,
     @param.query.object('where', getWhereSchemaFor(User)) where?: Where<User>,
   ): Promise<Count> {
-    return this.userRepository.updateAll({ ...user, password: user.password ? bcrypt.hashSync(user.password, 10) : undefined }, where);
+    return this.userRepository.updateAll(
+      {
+        ...user,
+        password: user.password
+          ? bcrypt.hashSync(user.password, 10)
+          : undefined,
+      },
+      where,
+    );
   }
 
   @get('/users/{id}', {
@@ -129,6 +141,32 @@ export class UserController {
     return this.userRepository.findById(id, filter);
   }
 
+  @get('/users/byEmail/{email}', {
+    responses: {
+      '200': {
+        description: 'User model instance',
+        content: {
+          'application/json': {
+            schema: getModelSchemaRef(User, { includeRelations: true }),
+          },
+        },
+      },
+    },
+  })
+  async findByEmail(
+    @param.path.string('email') email: string,
+    @param.query.object('filter', getFilterSchemaFor(User))
+    filter?: Filter<User>,
+  ): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (!user) {
+      throw new HttpErrors.NotFound(
+        `No user exists with the e-mail address ${email}.`,
+      );
+    }
+    return user;
+  }
+
   @patch('/users/{id}', {
     responses: {
       '204': {
@@ -147,7 +185,10 @@ export class UserController {
     })
     user: User,
   ): Promise<void> {
-    await this.userRepository.updateById(id, { ...user, password: user.password ? bcrypt.hashSync(user.password, 10) : undefined });
+    await this.userRepository.updateById(id, {
+      ...user,
+      password: user.password ? bcrypt.hashSync(user.password, 10) : undefined,
+    });
   }
 
   @put('/users/{id}', {
@@ -161,7 +202,10 @@ export class UserController {
     @param.path.string('id') id: string,
     @requestBody() user: User,
   ): Promise<void> {
-    await this.userRepository.replaceById(id, { ...user, password: user.password ? bcrypt.hashSync(user.password, 10) : undefined });
+    await this.userRepository.replaceById(id, {
+      ...user,
+      password: user.password ? bcrypt.hashSync(user.password, 10) : undefined,
+    });
   }
 
   @del('/users/{id}', {

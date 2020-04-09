@@ -1,7 +1,16 @@
 {
+  "ids": {
+    "User": 3,
+    "Client": 2
+  },
   "models": {
-    "User": {},
-    "Client": {},
+    "User": {
+      "55f269cc-a7af-4425-9bfa-b36358e8bbf8": "{\"id\":\"55f269cc-a7af-4425-9bfa-b36358e8bbf8\",\"firstName\":\"Admin\",\"lastName\":\"User\",\"email\":\"admin@superuser.com\",\"password\":\"$2b$10$je/AGrcT2DAf6MsCDDM.UuJTT31chGPDTPw81j5Vc8rHUyLMPBW3C\",\"isAdmin\":true}",
+      "2b2590f0-47d9-47b2-b108-4f08986ac191": "{\"id\":\"2b2590f0-47d9-47b2-b108-4f08986ac191\",\"firstName\":\"Test\",\"lastName\":\"User\",\"email\":\"test@user.com\",\"password\":\"$2b$10$/jfN7if4JsuZfdbduZ2gE.BAvfnyU8TRMX2U2tJTNAvwTqGKAI4Zy\",\"isAdmin\":false}"
+    },
+    "Client": {
+      "3636bcee-2077-4805-b815-0febf5543118": "{\"id\":\"3636bcee-2077-4805-b815-0febf5543118\",\"name\":\"Admin Client\",\"clientId\":\"admin\",\"clientSecret\":\"$2b$10$ji5FuprVEhjKVmTPiepdEewptNi4la8y45fBn79CcqUsJCynAJ0ya\",\"redirectUri\":\"http://localhost:8080/\",\"isTrusted\":true}"
+    },
     "Code": {},
     "Token": {}
   }

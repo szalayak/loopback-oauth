@@ -1,5 +1,6 @@
-import { Entity, model, property } from '@loopback/repository';
+import {Entity, model, property} from '@loopback/repository';
 import bcrypt from 'bcrypt';
+import {HttpErrors} from '@loopback/rest';
 
 @model()
 export class User extends Entity {
@@ -45,9 +46,12 @@ export class User extends Entity {
   }
 
   async verifyPassword(password: string) {
-    return bcrypt.compare(password, this.password);
+    const result = await bcrypt.compare(password, this.password);
+    if (!result) {
+      throw new HttpErrors.Unauthorized('Invalid password.');
+    }
+    return true;
   }
-
 }
 
 export interface UserRelations {

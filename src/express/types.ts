@@ -1,3 +1,3 @@
 export interface LooseObject {
-    [key: string]: unknown;
+  [key: string]: unknown;
 }

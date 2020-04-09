@@ -1,5 +1,6 @@
-import { Entity, model, property } from '@loopback/repository';
+import {Entity, model, property} from '@loopback/repository';
 import bcrypt from 'bcrypt';
+import {HttpErrors} from '@loopback/rest';
 
 @model()
 export class Client extends Entity {
@@ -45,9 +46,12 @@ export class Client extends Entity {
   }
 
   async verifySecret(clientSecret: string) {
-    return bcrypt.compare(clientSecret, this.clientSecret);
+    const result = await bcrypt.compare(clientSecret, this.clientSecret);
+    if (!result) {
+      throw new HttpErrors.Unauthorized('Invalid client secret.');
+    }
+    return true;
   }
-
 }
 
 export interface ClientRelations {

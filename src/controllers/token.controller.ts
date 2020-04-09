@@ -16,6 +16,7 @@ import {
   put,
   del,
   requestBody,
+  HttpErrors,
 } from '@loopback/rest';
 import {Token} from '../models';
 import {TokenRepository} from '../repositories';
@@ -126,6 +127,30 @@ export class TokenController {
     filter?: Filter<Token>,
   ): Promise<Token> {
     return this.tokenRepository.findById(id, filter);
+  }
+
+  @get('/tokens/{value}', {
+    responses: {
+      '200': {
+        description: 'Token model instance',
+        content: {
+          'application/json': {
+            schema: getModelSchemaRef(Token, {includeRelations: true}),
+          },
+        },
+      },
+    },
+  })
+  async findByValue(
+    @param.path.string('value') value: string,
+    @param.query.object('filter', getFilterSchemaFor(Token))
+    filter?: Filter<Token>,
+  ): Promise<Token> {
+    const token = await this.tokenRepository.findOne({where: {value}});
+    if (!token) {
+      throw new HttpErrors.NotFound('Invalid code');
+    }
+    return token;
   }
 
   @patch('/tokens/{id}', {

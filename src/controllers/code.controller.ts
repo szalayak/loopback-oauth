@@ -16,9 +16,12 @@ import {
   put,
   del,
   requestBody,
+  HttpErrors,
 } from '@loopback/rest';
 import {Code} from '../models';
 import {CodeRepository} from '../repositories';
+import * as jwt from 'jsonwebtoken';
+import {LooseObject} from '../express/types';
 
 export class CodeController {
   constructor(
@@ -126,6 +129,36 @@ export class CodeController {
     filter?: Filter<Code>,
   ): Promise<Code> {
     return this.codeRepository.findById(id, filter);
+  }
+
+  @get('/codes/{value}', {
+    responses: {
+      '200': {
+        description: 'Code model instance',
+        content: {
+          'application/json': {
+            schema: getModelSchemaRef(Code, {includeRelations: true}),
+          },
+        },
+      },
+    },
+  })
+  async findByValue(
+    @param.path.string('value') value: string,
+    @param.query.object('filter', getFilterSchemaFor(Code))
+    filter?: Filter<Code>,
+  ): Promise<Code> {
+    const {value: decodedValue} = jwt.verify(
+      value,
+      process.env.JWT_SECRET ?? '',
+    ) as LooseObject;
+    const code = await this.codeRepository.findOne({
+      where: {value: decodedValue as string},
+    });
+    if (!code) {
+      throw new HttpErrors.NotFound('Invalid code');
+    }
+    return code;
   }
 
   @patch('/codes/{id}', {
