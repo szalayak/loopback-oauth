@@ -32,7 +32,7 @@ export class UserController {
     responses: {
       '200': {
         description: 'User model instance',
-        content: { 'application/json': { schema: getModelSchemaRef(User) } },
+        content: { 'application/json': { schema: getModelSchemaRef(User), exclude: ['password'] } },
       },
     },
   })
@@ -51,7 +51,7 @@ export class UserController {
   ): Promise<User> {
     return this.userRepository.create({
       ...user,
-      password: bcrypt.hashSync(user.password, 10),
+      password: await bcrypt.hash(user.password, 10),
     });
   }
 
@@ -77,7 +77,7 @@ export class UserController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(User, { includeRelations: true }),
+              items: getModelSchemaRef(User, { includeRelations: true, exclude: ['password'] }),
             },
           },
         },
@@ -114,7 +114,7 @@ export class UserController {
       {
         ...user,
         password: user.password
-          ? bcrypt.hashSync(user.password, 10)
+          ? await bcrypt.hash(user.password, 10)
           : undefined,
       },
       where,
@@ -127,7 +127,7 @@ export class UserController {
         description: 'User model instance',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(User, { includeRelations: true }),
+            schema: getModelSchemaRef(User, { includeRelations: true, exclude: ['password'] }),
           },
         },
       },
@@ -144,10 +144,10 @@ export class UserController {
   @get('/users/byEmail/{email}', {
     responses: {
       '200': {
-        description: 'User model instance',
+        description: 'User model instance by email',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(User, { includeRelations: true }),
+            schema: getModelSchemaRef(User, { includeRelations: true, exclude: ['password'] }),
           },
         },
       },
@@ -155,8 +155,6 @@ export class UserController {
   })
   async findByEmail(
     @param.path.string('email') email: string,
-    @param.query.object('filter', getFilterSchemaFor(User))
-    filter?: Filter<User>,
   ): Promise<User> {
     const user = await this.userRepository.findOne({ where: { email } });
     if (!user) {
@@ -187,7 +185,7 @@ export class UserController {
   ): Promise<void> {
     await this.userRepository.updateById(id, {
       ...user,
-      password: user.password ? bcrypt.hashSync(user.password, 10) : undefined,
+      password: user.password ? await bcrypt.hash(user.password, 10) : undefined,
     });
   }
 
@@ -204,7 +202,7 @@ export class UserController {
   ): Promise<void> {
     await this.userRepository.replaceById(id, {
       ...user,
-      password: user.password ? bcrypt.hashSync(user.password, 10) : undefined,
+      password: user.password ? await bcrypt.hash(user.password, 10) : undefined,
     });
   }
 

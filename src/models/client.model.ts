@@ -1,8 +1,10 @@
-import {Entity, model, property} from '@loopback/repository';
+import { Entity, model, property } from '@loopback/repository';
 import bcrypt from 'bcrypt';
-import {HttpErrors} from '@loopback/rest';
+import { HttpErrors } from '@loopback/rest';
 
-@model()
+@model({
+  settings: { hiddenProperties: ['clientSecret'] }
+})
 export class Client extends Entity {
   @property({
     type: 'string',
@@ -41,12 +43,16 @@ export class Client extends Entity {
   })
   isTrusted: boolean;
 
+  // internal copy of client secret for verification even if it's not returned in the object
+  _clientSecret: string;
+
   constructor(data?: Partial<Client>) {
     super(data);
+    this._clientSecret = this.clientSecret;
   }
 
   async verifySecret(clientSecret: string) {
-    const result = await bcrypt.compare(clientSecret, this.clientSecret);
+    const result = await bcrypt.compare(clientSecret, this._clientSecret);
     if (!result) {
       throw new HttpErrors.Unauthorized('Invalid client secret.');
     }

@@ -18,36 +18,18 @@ import {
   requestBody,
   HttpErrors,
 } from '@loopback/rest';
-import {Code} from '../models';
-import {CodeRepository} from '../repositories';
+import { Code } from '../models';
+import { CodeRepository } from '../repositories';
 import * as jwt from 'jsonwebtoken';
-import {LooseObject} from '../express/types';
+import { LooseObject } from '../express/types';
 
 export class CodeController {
   constructor(
     @repository(CodeRepository)
     public codeRepository: CodeRepository,
-  ) {}
+  ) { }
 
-  @post('/codes', {
-    responses: {
-      '200': {
-        description: 'Code model instance',
-        content: {'application/json': {schema: getModelSchemaRef(Code)}},
-      },
-    },
-  })
   async create(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(Code, {
-            title: 'NewCode',
-            exclude: ['id'],
-          }),
-        },
-      },
-    })
     code: Omit<Code, 'id'>,
   ): Promise<Code> {
     return this.codeRepository.create(code);
@@ -57,7 +39,7 @@ export class CodeController {
     responses: {
       '200': {
         description: 'Code model count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -75,7 +57,7 @@ export class CodeController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(Code, {includeRelations: true}),
+              items: getModelSchemaRef(Code, { includeRelations: true }),
             },
           },
         },
@@ -89,35 +71,13 @@ export class CodeController {
     return this.codeRepository.find(filter);
   }
 
-  @patch('/codes', {
-    responses: {
-      '200': {
-        description: 'Code PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
-      },
-    },
-  })
-  async updateAll(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(Code, {partial: true}),
-        },
-      },
-    })
-    code: Code,
-    @param.query.object('where', getWhereSchemaFor(Code)) where?: Where<Code>,
-  ): Promise<Count> {
-    return this.codeRepository.updateAll(code, where);
-  }
-
   @get('/codes/{id}', {
     responses: {
       '200': {
         description: 'Code model instance',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(Code, {includeRelations: true}),
+            schema: getModelSchemaRef(Code, { includeRelations: true }),
           },
         },
       },
@@ -131,13 +91,13 @@ export class CodeController {
     return this.codeRepository.findById(id, filter);
   }
 
-  @get('/codes/{value}', {
+  @get('/codes/byValue/{value}', {
     responses: {
       '200': {
-        description: 'Code model instance',
+        description: 'Code model instance by value',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(Code, {includeRelations: true}),
+            schema: getModelSchemaRef(Code, { includeRelations: true }),
           },
         },
       },
@@ -145,55 +105,18 @@ export class CodeController {
   })
   async findByValue(
     @param.path.string('value') value: string,
-    @param.query.object('filter', getFilterSchemaFor(Code))
-    filter?: Filter<Code>,
   ): Promise<Code> {
-    const {value: decodedValue} = jwt.verify(
+    const { value: decodedValue } = jwt.verify(
       value,
       process.env.JWT_SECRET ?? '',
     ) as LooseObject;
     const code = await this.codeRepository.findOne({
-      where: {value: decodedValue as string},
+      where: { value: decodedValue as string },
     });
     if (!code) {
       throw new HttpErrors.NotFound('Invalid code');
     }
     return code;
-  }
-
-  @patch('/codes/{id}', {
-    responses: {
-      '204': {
-        description: 'Code PATCH success',
-      },
-    },
-  })
-  async updateById(
-    @param.path.string('id') id: string,
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(Code, {partial: true}),
-        },
-      },
-    })
-    code: Code,
-  ): Promise<void> {
-    await this.codeRepository.updateById(id, code);
-  }
-
-  @put('/codes/{id}', {
-    responses: {
-      '204': {
-        description: 'Code PUT success',
-      },
-    },
-  })
-  async replaceById(
-    @param.path.string('id') id: string,
-    @requestBody() code: Code,
-  ): Promise<void> {
-    await this.codeRepository.replaceById(id, code);
   }
 
   @del('/codes/{id}', {

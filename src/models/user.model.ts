@@ -1,8 +1,10 @@
-import {Entity, model, property} from '@loopback/repository';
+import { Entity, model, property } from '@loopback/repository';
 import bcrypt from 'bcrypt';
-import {HttpErrors} from '@loopback/rest';
+import { HttpErrors } from '@loopback/rest';
 
-@model()
+@model({
+  settings: { hiddenProperties: ['password'] }
+})
 export class User extends Entity {
   @property({
     type: 'string',
@@ -40,6 +42,7 @@ export class User extends Entity {
     default: false,
   })
   isAdmin: boolean;
+
 
   constructor(data?: Partial<User>) {
     super(data);
