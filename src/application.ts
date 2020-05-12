@@ -9,7 +9,9 @@ import { RestApplication } from '@loopback/rest';
 import { ServiceMixin } from '@loopback/service-proxy';
 import path from 'path';
 import { MySequence } from './sequence';
-import { AuthenticationComponent } from '@loopback/authentication';
+import { AuthenticationComponent, AuthenticationBindings } from '@loopback/authentication';
+import { Oauth2VerifyFunctionProvider } from './authentication-strategy-providers';
+import { PassportOauth2AuthProvider } from './authentication-strategies';
 
 export class LoopbackOauthApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
@@ -31,6 +33,20 @@ export class LoopbackOauthApplication extends BootMixin(
 
     // add authentication
     this.component(AuthenticationComponent);
+
+    // the verify function for passport-http
+    this.bind('authentication.basic.verify').toProvider(Oauth2VerifyFunctionProvider);
+
+    // register PassportBasicAuthProvider as a custom authentication strategy
+    this.addExtension(
+      this,
+      AuthenticationBindings.AUTHENTICATION_STRATEGY_EXTENSION_POINT_NAME,
+      PassportOauth2AuthProvider,
+      {
+        namespace:
+          AuthenticationBindings.AUTHENTICATION_STRATEGY_EXTENSION_POINT_NAME,
+      },
+    );
 
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here
