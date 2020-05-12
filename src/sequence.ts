@@ -20,8 +20,8 @@ export class MySequence implements SequenceHandler {
     @inject(SequenceActions.INVOKE_METHOD) protected invoke: InvokeMethod,
     @inject(SequenceActions.SEND) public send: Send,
     @inject(SequenceActions.REJECT) public reject: Reject,
-    @inject(AuthenticationBindings.AUTH_ACTION)
-    protected authenticateRequest: AuthenticateFn,
+    // @inject(AuthenticationBindings.AUTH_ACTION)
+    // protected authenticateRequest: AuthenticateFn,
   ) { }
 
   async handle(context: RequestContext) {
@@ -30,7 +30,7 @@ export class MySequence implements SequenceHandler {
       const route = this.findRoute(request);
 
       //call authentication action
-      await this.authenticateRequest(request);
+      //await this.authenticateRequest(request);
 
       // Authentication successful, proceed to invoke controller
       const args = await this.parseParams(request, route);
