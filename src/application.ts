@@ -31,22 +31,22 @@ export class LoopbackOauthApplication extends BootMixin(
     });
     this.component(RestExplorerComponent);
 
-    // // add authentication
-    // this.component(AuthenticationComponent);
+    // add authentication
+    this.component(AuthenticationComponent);
 
-    // // the verify function for passport-http
-    // this.bind('authentication.oauth2.verify').toProvider(Oauth2VerifyFunctionProvider);
+    // the verify function for passport-http
+    this.bind('authentication.oauth2.verify').toProvider(Oauth2VerifyFunctionProvider);
 
-    // // register PassportBasicAuthProvider as a custom authentication strategy
-    // this.addExtension(
-    //   this,
-    //   AuthenticationBindings.AUTHENTICATION_STRATEGY_EXTENSION_POINT_NAME,
-    //   PassportOauth2AuthProvider,
-    //   {
-    //     namespace:
-    //       AuthenticationBindings.AUTHENTICATION_STRATEGY_EXTENSION_POINT_NAME,
-    //   },
-    // );
+    // register PassportBasicAuthProvider as a custom authentication strategy
+    this.addExtension(
+      this,
+      AuthenticationBindings.AUTHENTICATION_STRATEGY_EXTENSION_POINT_NAME,
+      PassportOauth2AuthProvider,
+      {
+        namespace:
+          AuthenticationBindings.AUTHENTICATION_STRATEGY_EXTENSION_POINT_NAME,
+      },
+    );
 
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here
