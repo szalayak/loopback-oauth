@@ -18,21 +18,26 @@ import {
   requestBody,
   HttpErrors,
 } from '@loopback/rest';
-import { Client } from '../models';
-import { ClientRepository } from '../repositories';
+import {Client} from '../models';
+import {ClientRepository} from '../repositories';
 import bcrypt from 'bcrypt';
 
 export class ClientController {
   constructor(
     @repository(ClientRepository)
     public clientRepository: ClientRepository,
-  ) { }
+  ) {}
 
   @post('/clients', {
     responses: {
       '200': {
         description: 'Client model instance',
-        content: { 'application/json': { schema: getModelSchemaRef(Client), exclude: ['clientSecret'] } },
+        content: {
+          'application/json': {
+            schema: getModelSchemaRef(Client),
+            exclude: ['clientSecret'],
+          },
+        },
       },
     },
   })
@@ -59,7 +64,7 @@ export class ClientController {
     responses: {
       '200': {
         description: 'Client model count',
-        content: { 'application/json': { schema: CountSchema } },
+        content: {'application/json': {schema: CountSchema}},
       },
     },
   })
@@ -78,7 +83,10 @@ export class ClientController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(Client, { includeRelations: true, exclude: ['clientSecret'] }),
+              items: getModelSchemaRef(Client, {
+                includeRelations: true,
+                exclude: ['clientSecret'],
+              }),
             },
           },
         },
@@ -96,7 +104,7 @@ export class ClientController {
     responses: {
       '200': {
         description: 'Client PATCH success count',
-        content: { 'application/json': { schema: CountSchema } },
+        content: {'application/json': {schema: CountSchema}},
       },
     },
   })
@@ -104,7 +112,7 @@ export class ClientController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Client, { partial: true }),
+          schema: getModelSchemaRef(Client, {partial: true}),
         },
       },
     })
@@ -129,7 +137,10 @@ export class ClientController {
         description: 'Client model instance',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(Client, { includeRelations: true, exclude: ['clientSecret'] }),
+            schema: getModelSchemaRef(Client, {
+              includeRelations: true,
+              exclude: ['clientSecret'],
+            }),
           },
         },
       },
@@ -149,7 +160,10 @@ export class ClientController {
         description: 'Client model instance by clientId',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(Client, { includeRelations: true, exclude: ['clientSecret'] }),
+            schema: getModelSchemaRef(Client, {
+              includeRelations: true,
+              exclude: ['clientSecret'],
+            }),
           },
         },
       },
@@ -159,7 +173,7 @@ export class ClientController {
     @param.path.string('clientId') clientId: string,
   ): Promise<Client> {
     const client = await this.clientRepository.findOne({
-      where: { clientId: clientId },
+      where: {clientId: clientId},
     });
     if (!client) {
       throw new HttpErrors.NotFound(
@@ -181,7 +195,7 @@ export class ClientController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Client, { partial: true }),
+          schema: getModelSchemaRef(Client, {partial: true}),
         },
       },
     })

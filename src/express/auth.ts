@@ -1,14 +1,14 @@
 import passport from 'passport';
-import { BasicStrategy } from 'passport-http';
-import { Strategy as BearerStrategy } from 'passport-http-bearer';
-import { Strategy as LocalStrategy } from 'passport-local';
-import { Strategy as ClientPasswordStrategy } from 'passport-oauth2-client-password';
-import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import { LooseObject } from './types';
-import { Application } from 'express';
-import { Request, Response } from 'express';
+import {BasicStrategy} from 'passport-http';
+import {Strategy as BearerStrategy} from 'passport-http-bearer';
+import {Strategy as LocalStrategy} from 'passport-local';
+import {Strategy as ClientPasswordStrategy} from 'passport-oauth2-client-password';
+import {Strategy as JwtStrategy, ExtractJwt} from 'passport-jwt';
+import {LooseObject} from './types';
+import {Application} from 'express';
+import {Request, Response} from 'express';
 import dotenv from 'dotenv';
-import { DsDataSource } from '../datasources';
+import {DsDataSource} from '../datasources';
 import * as dsConfig from '../datasources/ds.datasource.config.json';
 import {
   UserController,
@@ -20,7 +20,7 @@ import {
   ClientRepository,
   TokenRepository,
 } from '../repositories';
-import { HttpErrors } from '@loopback/rest';
+import {HttpErrors} from '@loopback/rest';
 
 dotenv.config();
 
@@ -46,12 +46,12 @@ export const bearerVerifyFunction = (accessToken: string, done: Function) => {
       if (token.userId) {
         new UserController(new UserRepository(ds))
           .findById(token.userId)
-          .then(user => done(null, user, { scope: '*' }))
+          .then(user => done(null, user, {scope: '*'}))
           .catch(error => done(error));
       } else {
         new ClientController(new ClientRepository(ds))
           .findById(token.clientId)
-          .then(client => done(null, client, { scope: '*' }))
+          .then(client => done(null, client, {scope: '*'}))
           .catch(error => done(error));
       }
     })
@@ -60,7 +60,10 @@ export const bearerVerifyFunction = (accessToken: string, done: Function) => {
 export const bearerStrategy = new BearerStrategy(bearerVerifyFunction);
 
 // checking if the user behind a bearer token is an admin
-export const bearerAdminVerifyFunction = (accessToken: string, done: Function) => {
+export const bearerAdminVerifyFunction = (
+  accessToken: string,
+  done: Function,
+) => {
   new TokenController(new TokenRepository(ds))
     .findByValue(accessToken)
     .then(token => {
@@ -69,7 +72,7 @@ export const bearerAdminVerifyFunction = (accessToken: string, done: Function) =
           .findById(token.userId)
           .then(user => {
             if (user.isAdmin) {
-              done(null, user, { scope: '*' });
+              done(null, user, {scope: '*'});
             } else {
               done(
                 new HttpErrors.Unauthorized(
@@ -89,31 +92,33 @@ export const bearerAdminVerifyFunction = (accessToken: string, done: Function) =
     })
     .catch(error => done(error));
 };
-export const bearerAdminStrategy = new BearerStrategy(bearerAdminVerifyFunction);
+export const bearerAdminStrategy = new BearerStrategy(
+  bearerAdminVerifyFunction,
+);
 
 // jwt-based admin strategy - checks for a JWT token in the auth header or cookie
 // this is different from the bearer admin as it's not using the oAuth2 token but
 // a cookie directly issued by the server after an admin logs in
 
-export const jwtAdminVerifyFunction = (jwtPayload: LooseObject, done: Function) => {
+export const jwtAdminVerifyFunction = (
+  jwtPayload: LooseObject,
+  done: Function,
+) => {
   new UserController(new UserRepository(ds))
     .findById(jwtPayload.userId as string)
     .then(user =>
       user.isAdmin
         ? done(null, user)
         : done(
-          new HttpErrors.Unauthorized(
-            'You are not authorised to perform this action.',
+            new HttpErrors.Unauthorized(
+              'You are not authorised to perform this action.',
+            ),
           ),
-        ),
     )
     .catch(error => done(error));
 };
 
-export const adminStrategy = new JwtStrategy(
-  jwtOpts,
-  jwtAdminVerifyFunction
-);
+export const adminStrategy = new JwtStrategy(jwtOpts, jwtAdminVerifyFunction);
 
 export const auth = (app: Application) => {
   // initialise express
@@ -213,19 +218,16 @@ export const auth = (app: Application) => {
    */
   passport.use(bearerStrategy);
 
-  passport.use(
-    'bearer-admin',
-    bearerAdminStrategy,
-  );
+  passport.use('bearer-admin', bearerAdminStrategy);
 };
 
 const redirectIfNotAuthenticated: Function = (
   strategies: string | string[],
 ) => {
   return (req: Request, res: Response, next: Function) => {
-    passport.authenticate(strategies, { session: false }, (err, user) => {
+    passport.authenticate(strategies, {session: false}, (err, user) => {
       if (user) {
-        req.logIn(user, { session: false }, e => {
+        req.logIn(user, {session: false}, e => {
           if (e) return next(e);
           next();
         });
@@ -240,7 +242,7 @@ const redirectIfNotAuthenticated: Function = (
 
 export const isAdminAuthenticated = passport.authenticate(
   ['admin', 'bearer-admin'],
-  { session: false },
+  {session: false},
 );
 export const isAuthenticated = redirectIfNotAuthenticated(['jwt, bearer']);
 export const isJwtAuthenticated = redirectIfNotAuthenticated(['jwt']);
@@ -251,19 +253,19 @@ export const isLocalAuthenticated = (
   res: Response,
   next: Function,
 ) => {
-  passport.authenticate(['jwt', 'bearer'], { session: false }, (err, user) => {
+  passport.authenticate(['jwt', 'bearer'], {session: false}, (err, user) => {
     if (user) {
-      req.logIn(user, { session: false }, e => {
+      req.logIn(user, {session: false}, e => {
         if (e) return next(err);
         next();
       });
     } else {
       passport.authenticate(
         ['user-local', 'user-basic'],
-        { session: false },
+        {session: false},
         (e, localUser) => {
           if (localUser) {
-            req.logIn(localUser, { session: false }, e2 => {
+            req.logIn(localUser, {session: false}, e2 => {
               if (e2) return next(e2);
               next();
             });

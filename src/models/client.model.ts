@@ -1,9 +1,9 @@
-import { Entity, model, property } from '@loopback/repository';
+import {Entity, model, property} from '@loopback/repository';
 import bcrypt from 'bcrypt';
-import { HttpErrors } from '@loopback/rest';
+import {HttpErrors} from '@loopback/rest';
 
 @model({
-  settings: { hiddenProperties: ['clientSecret'] }
+  settings: {hiddenProperties: ['clientSecret']},
 })
 export class Client extends Entity {
   @property({

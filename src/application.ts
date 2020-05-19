@@ -1,17 +1,20 @@
-import { BootMixin } from '@loopback/boot';
-import { ApplicationConfig } from '@loopback/core';
+import {BootMixin} from '@loopback/boot';
+import {ApplicationConfig} from '@loopback/core';
 import {
   RestExplorerBindings,
   RestExplorerComponent,
 } from '@loopback/rest-explorer';
-import { RepositoryMixin } from '@loopback/repository';
-import { RestApplication } from '@loopback/rest';
-import { ServiceMixin } from '@loopback/service-proxy';
+import {RepositoryMixin} from '@loopback/repository';
+import {RestApplication} from '@loopback/rest';
+import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
-import { MySequence } from './sequence';
-import { AuthenticationComponent, AuthenticationBindings } from '@loopback/authentication';
-import { Oauth2VerifyFunctionProvider } from './authentication-strategy-providers';
-import { PassportOauth2AuthProvider } from './authentication-strategies';
+import {MySequence} from './sequence';
+import {
+  AuthenticationComponent,
+  AuthenticationBindings,
+} from '@loopback/authentication';
+import {Oauth2VerifyFunctionProvider} from './authentication-strategy-providers';
+import {PassportOauth2AuthProvider} from './authentication-strategies';
 
 export class LoopbackOauthApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
@@ -35,7 +38,9 @@ export class LoopbackOauthApplication extends BootMixin(
     this.component(AuthenticationComponent);
 
     // the verify function for passport-http
-    this.bind('authentication.oauth2.verify').toProvider(Oauth2VerifyFunctionProvider);
+    this.bind('authentication.oauth2.verify').toProvider(
+      Oauth2VerifyFunctionProvider,
+    );
 
     // register PassportBasicAuthProvider as a custom authentication strategy
     this.addExtension(

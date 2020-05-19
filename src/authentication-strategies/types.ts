@@ -1,5 +1,5 @@
-import { User } from '../models';
-import { UserProfile, securityId } from '@loopback/security';
+import {User} from '../models';
+import {UserProfile, securityId} from '@loopback/security';
 
 export namespace PassportAuthenticationBindings {
   export const OAUTH2_STRATEGY = 'passport.authentication.oauth2.strategy';
@@ -9,7 +9,7 @@ export namespace PassportAuthenticationBindings {
  * map passport profile to UserProfile in `@loopback/security`
  * @param user
  */
-export const mapProfile = function (user: User): UserProfile {
+export const mapProfile = function(user: User): UserProfile {
   const userProfile: UserProfile = {
     [securityId]: '' + user.id,
     profile: {

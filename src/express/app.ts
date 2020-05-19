@@ -1,11 +1,11 @@
 import express from 'express';
-import { Request, Response } from 'express';
+import {Request, Response} from 'express';
 import compression from 'compression'; // compresses requests
 import bodyParser from 'body-parser';
 import routes from './routes';
 import path from 'path';
 import cookieParser from 'cookie-parser';
-import { auth } from './auth';
+import {auth} from './auth';
 import session from 'express-session';
 import dotenv from 'dotenv';
 
@@ -19,7 +19,7 @@ const app = express();
 app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(
   session({
     secret: process.env.SESSION_SECRET ?? '',

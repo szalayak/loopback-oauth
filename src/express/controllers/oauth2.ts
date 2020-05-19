@@ -1,17 +1,17 @@
 import oauth2orize from 'oauth2orize';
 import passport from 'passport';
-import { LooseObject } from '../types';
-import { DsDataSource } from '../../datasources';
+import {LooseObject} from '../types';
+import {DsDataSource} from '../../datasources';
 import * as dsConfig from '../../datasources/ds.datasource.config.json';
-import { v4 as uuidv4 } from 'uuid';
-import { Code } from '../../models/code.model';
+import {v4 as uuidv4} from 'uuid';
+import {Code} from '../../models/code.model';
 import * as jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { Request, Response } from 'express';
-import { isJwtAuthenticated } from '../auth';
-import { ClientController } from '../../controllers/client.controller';
-import { ClientRepository } from '../../repositories/client.repository';
-import { Token } from '../../models/token.model';
+import {Request, Response} from 'express';
+import {isJwtAuthenticated} from '../auth';
+import {ClientController} from '../../controllers/client.controller';
+import {ClientRepository} from '../../repositories/client.repository';
+import {Token} from '../../models/token.model';
 import {
   TokenController,
   CodeController,
@@ -22,7 +22,7 @@ import {
   CodeRepository,
   UserRepository,
 } from '../../repositories';
-import { HttpErrors } from '@loopback/rest';
+import {HttpErrors} from '@loopback/rest';
 
 // read env config
 dotenv.config();
@@ -72,9 +72,9 @@ const oauth2 = () => {
     const ctrl = new TokenController(new TokenRepository(ds));
     const uuid = uuidv4();
     const value: string = jwt.sign(
-      { uuid, clientId, userId },
+      {uuid, clientId, userId},
       process.env.JWT_SECRET ?? '',
-      { expiresIn: '7d' },
+      {expiresIn: '7d'},
     );
     const token = await ctrl.create(
       new Token({
@@ -103,7 +103,7 @@ const oauth2 = () => {
     oauth2orize.grant.code((client, redirectUri, user, _ares, done) => {
       const ctrl = new CodeController(new CodeRepository(ds));
       const value = uuidv4();
-      const jwtCode = jwt.sign({ value }, process.env.JWT_SECRET ?? '', {
+      const jwtCode = jwt.sign({value}, process.env.JWT_SECRET ?? '', {
         expiresIn: '7d',
       });
       ctrl
@@ -152,7 +152,7 @@ const oauth2 = () => {
           ) {
             createToken(authCode.userId, authCode.clientId)
               .then(token =>
-                done(null, token.value, undefined, { userId: authCode.userId }),
+                done(null, token.value, undefined, {userId: authCode.userId}),
               )
               .catch(error => done(error));
           } else {
@@ -271,7 +271,7 @@ const authorization = [
 
       const ctrl = new TokenController(new TokenRepository(ds));
       ctrl
-        .find({ where: { userId: user.id, clientId: client.id } })
+        .find({where: {userId: user.id, clientId: client.id}})
         .then(tokens => done(null, tokens.length > 0, null, null))
         .catch(error => done(error, false, null, null));
     },
@@ -302,9 +302,9 @@ const decision = [isJwtAuthenticated, server.decision()];
 // authenticate when making requests to this endpoint.
 
 const token = [
-  passport.authenticate(['basic', 'oauth2-client-password'], { session: false }),
+  passport.authenticate(['basic', 'oauth2-client-password'], {session: false}),
   server.token(),
   server.errorHandler(),
 ];
 
-export { oauth2, authorization, decision, token };
+export {oauth2, authorization, decision, token};

@@ -18,20 +18,18 @@ import {
   requestBody,
   HttpErrors,
 } from '@loopback/rest';
-import { Code } from '../models';
-import { CodeRepository } from '../repositories';
+import {Code} from '../models';
+import {CodeRepository} from '../repositories';
 import * as jwt from 'jsonwebtoken';
-import { LooseObject } from '../express/types';
+import {LooseObject} from '../express/types';
 
 export class CodeController {
   constructor(
     @repository(CodeRepository)
     public codeRepository: CodeRepository,
-  ) { }
+  ) {}
 
-  async create(
-    code: Omit<Code, 'id'>,
-  ): Promise<Code> {
+  async create(code: Omit<Code, 'id'>): Promise<Code> {
     return this.codeRepository.create(code);
   }
 
@@ -39,7 +37,7 @@ export class CodeController {
     responses: {
       '200': {
         description: 'Code model count',
-        content: { 'application/json': { schema: CountSchema } },
+        content: {'application/json': {schema: CountSchema}},
       },
     },
   })
@@ -57,7 +55,7 @@ export class CodeController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(Code, { includeRelations: true }),
+              items: getModelSchemaRef(Code, {includeRelations: true}),
             },
           },
         },
@@ -77,7 +75,7 @@ export class CodeController {
         description: 'Code model instance',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(Code, { includeRelations: true }),
+            schema: getModelSchemaRef(Code, {includeRelations: true}),
           },
         },
       },
@@ -97,21 +95,19 @@ export class CodeController {
         description: 'Code model instance by value',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(Code, { includeRelations: true }),
+            schema: getModelSchemaRef(Code, {includeRelations: true}),
           },
         },
       },
     },
   })
-  async findByValue(
-    @param.path.string('value') value: string,
-  ): Promise<Code> {
-    const { value: decodedValue } = jwt.verify(
+  async findByValue(@param.path.string('value') value: string): Promise<Code> {
+    const {value: decodedValue} = jwt.verify(
       value,
       process.env.JWT_SECRET ?? '',
     ) as LooseObject;
     const code = await this.codeRepository.findOne({
-      where: { value: decodedValue as string },
+      where: {value: decodedValue as string},
     });
     if (!code) {
       throw new HttpErrors.NotFound('Invalid code');

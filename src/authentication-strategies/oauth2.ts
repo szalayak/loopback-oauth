@@ -1,13 +1,13 @@
-import { Strategy, StrategyOptions, VerifyFunction } from 'passport-oauth2';
-import { StrategyAdapter } from '@loopback/authentication-passport';
+import {Strategy, StrategyOptions, VerifyFunction} from 'passport-oauth2';
+import {StrategyAdapter} from '@loopback/authentication-passport';
 import {
   AuthenticationStrategy,
   AuthenticationBindings,
 } from '@loopback/authentication';
-import { Provider } from '@loopback/core';
-import { inject } from '@loopback/context';
-import { UserProfileFactory } from '@loopback/authentication';
-import { PassportAuthenticationBindings } from './types';
+import {Provider} from '@loopback/core';
+import {inject} from '@loopback/context';
+import {UserProfileFactory} from '@loopback/authentication';
+import {PassportAuthenticationBindings} from './types';
 
 export class PassportOauth2AuthProvider<User>
   implements Provider<AuthenticationStrategy> {
@@ -16,7 +16,7 @@ export class PassportOauth2AuthProvider<User>
     private verifyFn: VerifyFunction,
     @inject(AuthenticationBindings.USER_PROFILE_FACTORY)
     private myUserProfileFactory: UserProfileFactory<User>,
-  ) { }
+  ) {}
 
   value(): AuthenticationStrategy {
     const oauth2Strategy = this.configuredOauth2Strategy(this.verifyFn);
@@ -29,8 +29,9 @@ export class PassportOauth2AuthProvider<User>
       authorizationURL: '/oauth/authorize',
       tokenURL: '/oauth/token',
       clientID: 'admin',
-      clientSecret: '$2b$10$ji5FuprVEhjKVmTPiepdEewptNi4la8y45fBn79CcqUsJCynAJ0ya',
-      callbackURL: 'http://localhost:8080/'
+      clientSecret:
+        '$2b$10$ji5FuprVEhjKVmTPiepdEewptNi4la8y45fBn79CcqUsJCynAJ0ya',
+      callbackURL: 'http://localhost:8080/',
     };
     return new Strategy(options, verifyFn);
   }

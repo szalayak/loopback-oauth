@@ -18,14 +18,14 @@ import {
   requestBody,
   HttpErrors,
 } from '@loopback/rest';
-import { Token } from '../models';
-import { TokenRepository } from '../repositories';
+import {Token} from '../models';
+import {TokenRepository} from '../repositories';
 
 export class TokenController {
   constructor(
     @repository(TokenRepository)
     public tokenRepository: TokenRepository,
-  ) { }
+  ) {}
 
   // @post('/tokens', {
   //   responses: {
@@ -55,7 +55,7 @@ export class TokenController {
     responses: {
       '200': {
         description: 'Token model count',
-        content: { 'application/json': { schema: CountSchema } },
+        content: {'application/json': {schema: CountSchema}},
       },
     },
   })
@@ -73,7 +73,7 @@ export class TokenController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(Token, { includeRelations: true }),
+              items: getModelSchemaRef(Token, {includeRelations: true}),
             },
           },
         },
@@ -115,7 +115,7 @@ export class TokenController {
         description: 'Token model instance',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(Token, { includeRelations: true }),
+            schema: getModelSchemaRef(Token, {includeRelations: true}),
           },
         },
       },
@@ -135,16 +135,14 @@ export class TokenController {
         description: 'Token model instance by value',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(Token, { includeRelations: true }),
+            schema: getModelSchemaRef(Token, {includeRelations: true}),
           },
         },
       },
     },
   })
-  async findByValue(
-    @param.path.string('value') value: string,
-  ): Promise<Token> {
-    const token = await this.tokenRepository.findOne({ where: { value } });
+  async findByValue(@param.path.string('value') value: string): Promise<Token> {
+    const token = await this.tokenRepository.findOne({where: {value}});
     if (!token) {
       throw new HttpErrors.NotFound('Invalid code');
     }
