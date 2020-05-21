@@ -57,9 +57,7 @@ export const login = (req: Request, res: Response) => {
 };
 
 export const authenticate = (req: Request, res: Response) => {
-  // eslint-disable-next-line @typescript-eslint/camelcase
   const jwtToken = createJwtToken(req, res);
-  // eslint-disable-next-line @typescript-eslint/camelcase
   res.json({userId: (req.user as User).id, jwtToken});
 };
 

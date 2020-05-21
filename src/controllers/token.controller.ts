@@ -6,16 +6,12 @@ import {
   Where,
 } from '@loopback/repository';
 import {
-  post,
   param,
   get,
   getFilterSchemaFor,
   getModelSchemaRef,
   getWhereSchemaFor,
-  patch,
-  put,
   del,
-  requestBody,
   HttpErrors,
 } from '@loopback/rest';
 import {Token} from '../models';

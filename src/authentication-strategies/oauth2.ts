@@ -30,7 +30,7 @@ export class PassportOauth2AuthProvider<User>
       tokenURL: '/oauth/token',
       clientID: 'admin',
       clientSecret:
-        '$2b$10$ji5FuprVEhjKVmTPiepdEewptNi4la8y45fBn79CcqUsJCynAJ0ya',
+        '$2b$10$ji5FuprVEhjKVmTPiepdEewptNi4la8y45fBn79CcqUsJCynAJ0ya', // TODO replace this
       callbackURL: 'http://localhost:8080/',
     };
     return new Strategy(options, verifyFn);

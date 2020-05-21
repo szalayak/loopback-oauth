@@ -54,7 +54,7 @@ export class ClientController {
     })
     client: Omit<Client, 'id'>,
   ): Promise<Client> {
-    return await this.clientRepository.create({
+    return this.clientRepository.create({
       ...client,
       clientSecret: await bcrypt.hash(client.clientSecret, 10),
     });
