@@ -1,5 +1,9 @@
 import {BootMixin} from '@loopback/boot';
-import {ApplicationConfig, addExtension} from '@loopback/core';
+import {
+  ApplicationConfig,
+  addExtension,
+  createBindingFromClass,
+} from '@loopback/core';
 import {
   RestExplorerBindings,
   RestExplorerComponent,
@@ -12,6 +16,7 @@ import {MySequence} from './sequence';
 import {
   AuthenticationComponent,
   AuthenticationBindings,
+  registerAuthenticationStrategy,
 } from '@loopback/authentication';
 import {Oauth2VerifyFunctionProvider} from './authentication-strategy-providers';
 import {
@@ -45,7 +50,7 @@ export class LoopbackOauthApplication extends BootMixin(
       Oauth2VerifyFunctionProvider,
     );
 
-    // register PassportBasicAuthProvider as a custom authentication strategy
+    // register PassportOauth2AuthProvider as a custom authentication strategy
     addExtension(
       this,
       AuthenticationBindings.AUTHENTICATION_STRATEGY_EXTENSION_POINT_NAME,
@@ -55,11 +60,12 @@ export class LoopbackOauthApplication extends BootMixin(
           AuthenticationBindings.AUTHENTICATION_STRATEGY_EXTENSION_POINT_NAME,
       },
     );
-    this.configure(AuthenticationBindings.COMPONENT).to({
-      defaultMetadata: {
-        strategy: PassportAuthenticationBindings.OAUTH2_STRATEGY,
-      },
-    });
+
+    // this.configure(AuthenticationBindings.COMPONENT).to({
+    //   defaultMetadata: {
+    //     strategy: PassportAuthenticationBindings.OAUTH2_STRATEGY,
+    //   },
+    // });
 
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here
