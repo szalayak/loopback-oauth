@@ -1,9 +1,5 @@
 import {BootMixin} from '@loopback/boot';
-import {
-  ApplicationConfig,
-  addExtension,
-  createBindingFromClass,
-} from '@loopback/core';
+import {ApplicationConfig, CoreTags} from '@loopback/core';
 import {
   RestExplorerBindings,
   RestExplorerComponent,
@@ -16,12 +12,10 @@ import {MySequence} from './sequence';
 import {
   AuthenticationComponent,
   AuthenticationBindings,
-  registerAuthenticationStrategy,
 } from '@loopback/authentication';
-import {Oauth2VerifyFunctionProvider} from './authentication-strategy-providers';
 import {
-  PassportOauth2AuthProvider,
-  PassportAuthenticationBindings,
+  OAUTH2_STRATEGY_NAME,
+  oauth2AuthStrategy,
 } from './authentication-strategies';
 
 export class LoopbackOauthApplication extends BootMixin(
@@ -45,27 +39,34 @@ export class LoopbackOauthApplication extends BootMixin(
     // add authentication
     this.component(AuthenticationComponent);
 
-    // the verify function for passport-oauth2
-    this.bind('authentication.oauth2.verify').toProvider(
-      Oauth2VerifyFunctionProvider,
-    );
-
-    // register PassportOauth2AuthProvider as a custom authentication strategy
-    addExtension(
-      this,
-      AuthenticationBindings.AUTHENTICATION_STRATEGY_EXTENSION_POINT_NAME,
-      PassportOauth2AuthProvider,
-      {
-        namespace:
+    this.bind('authentication.strategies.oauth2AuthStrategy')
+      .to(oauth2AuthStrategy)
+      .tag({
+        [CoreTags.EXTENSION_FOR]:
           AuthenticationBindings.AUTHENTICATION_STRATEGY_EXTENSION_POINT_NAME,
-      },
-    );
+      });
 
-    // this.configure(AuthenticationBindings.COMPONENT).to({
-    //   defaultMetadata: {
-    //     strategy: PassportAuthenticationBindings.OAUTH2_STRATEGY,
+    // // the verify function for passport-oauth2
+    // this.bind('authentication.oauth2.verify').toProvider(
+    //   Oauth2VerifyFunctionProvider,
+    // );
+
+    // // register PassportOauth2AuthProvider as a custom authentication strategy
+    // addExtension(
+    //   this,
+    //   AuthenticationBindings.AUTHENTICATION_STRATEGY_EXTENSION_POINT_NAME,
+    //   PassportOauth2AuthProvider,
+    //   {
+    //     namespace:
+    //       AuthenticationBindings.AUTHENTICATION_STRATEGY_EXTENSION_POINT_NAME,
     //   },
-    // });
+    // );
+
+    this.configure(AuthenticationBindings.COMPONENT).to({
+      defaultMetadata: {
+        strategy: OAUTH2_STRATEGY_NAME,
+      },
+    });
 
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here
