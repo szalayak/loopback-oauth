@@ -1,5 +1,5 @@
 import {BootMixin} from '@loopback/boot';
-import {ApplicationConfig, CoreTags} from '@loopback/core';
+import {ApplicationConfig, BindingKey, CoreTags} from '@loopback/core';
 import {
   RestExplorerBindings,
   RestExplorerComponent,
@@ -13,16 +13,35 @@ import {
   AuthenticationComponent,
   AuthenticationBindings,
 } from '@loopback/authentication';
-import {
-  OAUTH2_STRATEGY_NAME,
-  oauth2AuthStrategy,
-} from './authentication-strategies';
+import {SECURITY_SCHEME_SPEC, OPERATION_SECURITY_SPEC} from './utils';
+import {oauth2AuthStrategy} from './authentication-strategies';
+
+/**
+ * Information from package.json
+ */
+export interface PackageInfo {
+  name: string;
+  version: string;
+  description: string;
+}
+export const PackageKey = BindingKey.create<PackageInfo>('application.package');
+
+const pkg: PackageInfo = require('../package.json');
 
 export class LoopbackOauthApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
 ) {
   constructor(options: ApplicationConfig = {}) {
     super(options);
+
+    this.api({
+      openapi: '3.0.0',
+      info: {title: pkg.name, version: pkg.version},
+      paths: {},
+      components: {securitySchemes: SECURITY_SCHEME_SPEC},
+      servers: [{url: '/'}],
+      security: OPERATION_SECURITY_SPEC,
+    });
 
     // Set up the custom sequence
     this.sequence(MySequence);
@@ -39,6 +58,8 @@ export class LoopbackOauthApplication extends BootMixin(
     // add authentication
     this.component(AuthenticationComponent);
 
+    // register strategy
+
     this.bind('authentication.strategies.oauth2AuthStrategy')
       .to(oauth2AuthStrategy)
       .tag({
@@ -46,27 +67,9 @@ export class LoopbackOauthApplication extends BootMixin(
           AuthenticationBindings.AUTHENTICATION_STRATEGY_EXTENSION_POINT_NAME,
       });
 
-    // // the verify function for passport-oauth2
-    // this.bind('authentication.oauth2.verify').toProvider(
-    //   Oauth2VerifyFunctionProvider,
-    // );
-
-    // // register PassportOauth2AuthProvider as a custom authentication strategy
-    // addExtension(
-    //   this,
-    //   AuthenticationBindings.AUTHENTICATION_STRATEGY_EXTENSION_POINT_NAME,
-    //   PassportOauth2AuthProvider,
-    //   {
-    //     namespace:
-    //       AuthenticationBindings.AUTHENTICATION_STRATEGY_EXTENSION_POINT_NAME,
-    //   },
-    // );
-
-    this.configure(AuthenticationBindings.COMPONENT).to({
-      defaultMetadata: {
-        strategy: OAUTH2_STRATEGY_NAME,
-      },
-    });
+    // this.configure(AuthenticationBindings.COMPONENT).to({
+    //   defaultMetadata: { strategy: OAUTH2_STRATEGY_NAME },
+    // });
 
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here

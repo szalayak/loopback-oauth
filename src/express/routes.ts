@@ -1,4 +1,4 @@
-import {Application} from 'express';
+import {Application, Request, Response} from 'express';
 import * as home from './controllers/home';
 import {
   isBearerAuthenticated,
@@ -22,4 +22,7 @@ export default function routes(app: Application): void {
   app.get('/oauth/authorize', authorization);
   app.post('/oauth/authorize/decision', decision);
   app.post('/oauth/token', token);
+  app.get('/oauth2-redirect.html', (req: Request, res: Response) =>
+    res.render('oauth2-redirect'),
+  );
 }
