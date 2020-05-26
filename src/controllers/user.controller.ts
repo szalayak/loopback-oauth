@@ -21,6 +21,7 @@ import {
 import {User} from '../models';
 import {UserRepository} from '../repositories';
 import bcrypt from 'bcrypt';
+import {authenticate} from '@loopback/authentication';
 
 export class UserController {
   constructor(
@@ -28,6 +29,7 @@ export class UserController {
     public userRepository: UserRepository,
   ) {}
 
+  @authenticate('oauth2')
   @post('/users', {
     responses: {
       '200': {

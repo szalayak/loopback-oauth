@@ -21,10 +21,11 @@ const oauth2VerifyFn: VerifyFunction = (
   profile: User,
   done: Function,
 ) => {
-  done(profile);
+  if (profile) done(null, profile);
+  else done(new Error('Verification failed, no profile was returned.'));
 };
 
-const strategy = new Strategy(
+export const oauth2Strategy = new Strategy(
   {
     authorizationURL: '/oauth/authorize',
     tokenURL: '/oauth/token',
@@ -39,7 +40,7 @@ export const OAUTH2_STRATEGY_NAME = 'oauth2';
 
 export const oauth2AuthStrategy = new StrategyAdapter(
   // The configured basic strategy instance
-  strategy,
+  oauth2Strategy,
   // Give the strategy a name
   // You'd better define your strategy name as a constant, like
   // `const AUTH_STRATEGY_NAME = 'basic'`.
