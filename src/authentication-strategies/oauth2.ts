@@ -1,51 +1,61 @@
-import {Strategy, VerifyFunction} from 'passport-oauth2';
-import {StrategyAdapter} from '@loopback/authentication-passport';
-import {User} from '../models';
-import {UserProfileFactory} from '@loopback/authentication';
-import {UserProfile, securityId} from '@loopback/security';
+import { AuthenticationStrategy, asAuthStrategy } from '@loopback/authentication';
+import { StrategyAdapter } from '@loopback/authentication-passport';
+import { Strategy } from 'passport-oauth2';
+import { RedirectRoute, Request } from '@loopback/rest';
+import { UserProfile } from '@loopback/security';
+import { User } from '../models';
+import { inject, bind, extensions, Getter } from '@loopback/core';
+import { PassportAuthenticationBindings, mapProfile } from './types';
 
-export const mapProfile: UserProfileFactory<User> = function(
-  user: User,
-): UserProfile {
-  return {
-    [securityId]: '' + user.id,
-    profile: {
-      ...user,
-    },
-  };
-};
+@bind(asAuthStrategy)
+export class Oauth2AuthStrategy implements AuthenticationStrategy {
+  name = 'oauth2';
+  protected strategy: StrategyAdapter<User>;
 
-const oauth2VerifyFn: VerifyFunction = (
-  _accessToken: string,
-  _refreshToken: string,
-  profile: User,
-  done: Function,
-) => {
-  if (profile) done(null, profile);
-  else done(new Error('Verification failed, no profile was returned.'));
-};
+  /**
+   * create an oauth2 strategy
+   */
+  constructor(
+    /**
+     * enable extensions for provider specific oauth2 implementations
+     * reroute to the specific extension based on given provider name
+     */
+    @extensions(PassportAuthenticationBindings.OAUTH2_STRATEGY)
+    private getStrategies: Getter<Oauth2AuthStrategy[]>,
+    @inject('oauth2Strategy')
+    public passportstrategy: Strategy,
+  ) {
+    this.strategy = new StrategyAdapter(
+      this.passportstrategy,
+      this.name,
+      mapProfile.bind(this),
+    );
+  }
 
-export const oauth2Strategy = new Strategy(
-  {
-    authorizationURL: '/oauth/authorize',
-    tokenURL: '/oauth/token',
-    clientID: 'admin',
-    clientSecret: 'Welcome1', // TODO replace this
-    callbackURL: 'http://localhost:8080/oauth2-redirect.html',
-  },
-  oauth2VerifyFn,
-);
-
-export const OAUTH2_STRATEGY_NAME = 'oauth2';
-
-export const oauth2AuthStrategy = new StrategyAdapter(
-  // The configured basic strategy instance
-  oauth2Strategy,
-  // Give the strategy a name
-  // You'd better define your strategy name as a constant, like
-  // `const AUTH_STRATEGY_NAME = 'basic'`.
-  // You will need to decorate the APIs later with the same name.
-  OAUTH2_STRATEGY_NAME,
-  // Provide a user profile factory
-  mapProfile,
-);
+  /**
+   * authenticate a request
+   * @param request
+   */
+  async authenticate(request: Request): Promise<UserProfile | RedirectRoute> {
+    if (
+      request.query['oauth2-provider-name'] &&
+      request.query['oauth2-provider-name'] !== 'oauth2'
+    ) {
+      /**
+       * if provider name is given then reroute to the provider extension
+       */
+      const providerName = request.query['oauth2-provider-name'];
+      const strategies: Oauth2AuthStrategy[] = await this.getStrategies();
+      const strategy = strategies.find(
+        (s: Oauth2AuthStrategy) => s.name === 'oauth2-' + providerName,
+      );
+      if (!strategy) throw new Error('provider not found');
+      return strategy.authenticate(request);
+    } else {
+      /**
+       * provider not given, use passport-oauth2 for custom provider implementation
+       */
+      return this.strategy.authenticate(request);
+    }
+  }
+}

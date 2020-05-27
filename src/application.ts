@@ -1,4 +1,4 @@
-import {BootMixin} from '@loopback/boot';
+import { BootMixin } from '@loopback/boot';
 import {
   ApplicationConfig,
   BindingKey,
@@ -8,17 +8,18 @@ import {
   RestExplorerBindings,
   RestExplorerComponent,
 } from '@loopback/rest-explorer';
-import {RepositoryMixin} from '@loopback/repository';
-import {RestApplication} from '@loopback/rest';
-import {ServiceMixin} from '@loopback/service-proxy';
+import { RepositoryMixin } from '@loopback/repository';
+import { RestApplication } from '@loopback/rest';
+import { ServiceMixin } from '@loopback/service-proxy';
 import path from 'path';
-import {MySequence} from './sequence';
+import { MySequence } from './sequence';
 import {
   AuthenticationComponent,
   AuthenticationBindings,
 } from '@loopback/authentication';
-import {SECURITY_SCHEME_SPEC, OPERATION_SECURITY_SPEC} from './utils';
-import {CustomOauth2} from './authentication-strategy-providers';
+import { SECURITY_SCHEME_SPEC, OPERATION_SECURITY_SPEC } from './utils';
+import { CustomOauth2 } from './authentication-strategy-providers';
+import { Oauth2AuthStrategy } from './authentication-strategies';
 
 /**
  * Information from package.json
@@ -40,10 +41,10 @@ export class LoopbackOauthApplication extends BootMixin(
 
     this.api({
       openapi: '3.0.0',
-      info: {title: pkg.name, version: pkg.version},
+      info: { title: pkg.name, version: pkg.version },
       paths: {},
-      components: {securitySchemes: SECURITY_SCHEME_SPEC},
-      servers: [{url: '/'}],
+      components: { securitySchemes: SECURITY_SCHEME_SPEC },
+      servers: [{ url: '/' }],
       security: OPERATION_SECURITY_SPEC,
     });
 
@@ -77,6 +78,7 @@ export class LoopbackOauthApplication extends BootMixin(
   }
   setUpBindings(): void {
     // passport strategies
-    this.add(createBindingFromClass(CustomOauth2, {key: 'oauth2Strategy'}));
+    this.add(createBindingFromClass(CustomOauth2, { key: 'oauth2Strategy' }));
+    this.add(createBindingFromClass(Oauth2AuthStrategy));
   }
 }

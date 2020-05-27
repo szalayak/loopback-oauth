@@ -18,18 +18,17 @@ import {
   requestBody,
   HttpErrors,
 } from '@loopback/rest';
-import {User} from '../models';
-import {UserRepository} from '../repositories';
+import { User } from '../models';
+import { UserRepository } from '../repositories';
 import bcrypt from 'bcrypt';
-import {authenticate} from '@loopback/authentication';
+import { authenticate } from '@loopback/authentication';
 
 export class UserController {
   constructor(
     @repository(UserRepository)
     public userRepository: UserRepository,
-  ) {}
+  ) { }
 
-  @authenticate('oauth2')
   @post('/users', {
     responses: {
       '200': {
@@ -66,7 +65,7 @@ export class UserController {
     responses: {
       '200': {
         description: 'User model count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -76,6 +75,7 @@ export class UserController {
     return this.userRepository.count(where);
   }
 
+  @authenticate('oauth2')
   @get('/users', {
     responses: {
       '200': {
@@ -105,7 +105,7 @@ export class UserController {
     responses: {
       '200': {
         description: 'User PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -113,7 +113,7 @@ export class UserController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(User, {partial: true}),
+          schema: getModelSchemaRef(User, { partial: true }),
         },
       },
     })
@@ -170,7 +170,7 @@ export class UserController {
     },
   })
   async findByEmail(@param.path.string('email') email: string): Promise<User> {
-    const user = await this.userRepository.findOne({where: {email}});
+    const user = await this.userRepository.findOne({ where: { email } });
     if (!user) {
       throw new HttpErrors.NotFound(
         `No user exists with the e-mail address ${email}.`,
@@ -191,7 +191,7 @@ export class UserController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(User, {partial: true}),
+          schema: getModelSchemaRef(User, { partial: true }),
         },
       },
     })
