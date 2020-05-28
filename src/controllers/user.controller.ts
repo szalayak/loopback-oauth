@@ -22,6 +22,7 @@ import { User } from '../models';
 import { UserRepository } from '../repositories';
 import bcrypt from 'bcrypt';
 import { authenticate } from '@loopback/authentication';
+import { OAuth2InterceptExpressMiddleware } from '../authentication-interceptors';
 
 export class UserController {
   constructor(
@@ -75,7 +76,7 @@ export class UserController {
     return this.userRepository.count(where);
   }
 
-  @authenticate('oauth2')
+  @OAuth2InterceptExpressMiddleware()
   @get('/users', {
     responses: {
       '200': {

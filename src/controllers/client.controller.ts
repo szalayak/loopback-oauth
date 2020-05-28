@@ -18,15 +18,16 @@ import {
   requestBody,
   HttpErrors,
 } from '@loopback/rest';
-import {Client} from '../models';
-import {ClientRepository} from '../repositories';
+import { Client } from '../models';
+import { ClientRepository } from '../repositories';
 import bcrypt from 'bcrypt';
+import { authenticate } from '@loopback/authentication';
 
 export class ClientController {
   constructor(
     @repository(ClientRepository)
     public clientRepository: ClientRepository,
-  ) {}
+  ) { }
 
   @post('/clients', {
     responses: {
@@ -64,7 +65,7 @@ export class ClientController {
     responses: {
       '200': {
         description: 'Client model count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -75,6 +76,7 @@ export class ClientController {
     return this.clientRepository.count(where);
   }
 
+  @authenticate('oauth2Strategy')
   @get('/clients', {
     responses: {
       '200': {
@@ -104,7 +106,7 @@ export class ClientController {
     responses: {
       '200': {
         description: 'Client PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -112,7 +114,7 @@ export class ClientController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Client, {partial: true}),
+          schema: getModelSchemaRef(Client, { partial: true }),
         },
       },
     })
@@ -173,7 +175,7 @@ export class ClientController {
     @param.path.string('clientId') clientId: string,
   ): Promise<Client> {
     const client = await this.clientRepository.findOne({
-      where: {clientId: clientId},
+      where: { clientId: clientId },
     });
     if (!client) {
       throw new HttpErrors.NotFound(
@@ -195,7 +197,7 @@ export class ClientController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Client, {partial: true}),
+          schema: getModelSchemaRef(Client, { partial: true }),
         },
       },
     })

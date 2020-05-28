@@ -10,10 +10,10 @@
 //   console.log('Server is running at http://127.0.0.1:8080');
 // }
 
-import { RestApplication } from '@loopback/rest';
+import {RestApplication} from '@loopback/rest';
 import * as path from 'path';
-import { oauth2ProfileFunction } from './authentication-strategies';
-import { ApplicationConfig, ExpressServer } from './server';
+import {oauth2ProfileFunction} from './authentication-strategies';
+import {ApplicationConfig, ExpressServer} from './server';
 
 export * from './server';
 

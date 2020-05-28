@@ -2,8 +2,8 @@
   "ids": {
     "User": 3,
     "Client": 2,
-    "Code": 7,
-    "Token": 3
+    "Code": 17,
+    "Token": 5
   },
   "models": {
     "User": {
@@ -11,7 +11,7 @@
       "2b2590f0-47d9-47b2-b108-4f08986ac191": "{\"id\":\"2b2590f0-47d9-47b2-b108-4f08986ac191\",\"firstName\":\"Test\",\"lastName\":\"User\",\"email\":\"test@user.com\",\"password\":\"$2b$10$/jfN7if4JsuZfdbduZ2gE.BAvfnyU8TRMX2U2tJTNAvwTqGKAI4Zy\",\"isAdmin\":false}"
     },
     "Client": {
-      "3636bcee-2077-4805-b815-0febf5543118": "{\"id\":\"3636bcee-2077-4805-b815-0febf5543118\",\"name\":\"Admin Client\",\"clientId\":\"admin\",\"clientSecret\":\"$2b$10$ji5FuprVEhjKVmTPiepdEewptNi4la8y45fBn79CcqUsJCynAJ0ya\",\"redirectUri\":\"http://localhost:8080/oauth2-redirect.html\",\"isTrusted\":true}"
+      "3636bcee-2077-4805-b815-0febf5543118": "{\"id\":\"3636bcee-2077-4805-b815-0febf5543118\",\"name\":\"Admin Client\",\"clientId\":\"admin\",\"clientSecret\":\"$2b$10$ji5FuprVEhjKVmTPiepdEewptNi4la8y45fBn79CcqUsJCynAJ0ya\",\"redirectUri\":\"http://localhost:8080/api/auth/thirdparty/oauth2/callback\",\"isTrusted\":true}"
     },
     "Code": {
       "4989e09e-401e-4c24-868b-b59f8c03e75b": "{\"id\":\"4989e09e-401e-4c24-868b-b59f8c03e75b\",\"clientId\":\"3636bcee-2077-4805-b815-0febf5543118\",\"userId\":\"55f269cc-a7af-4425-9bfa-b36358e8bbf8\",\"redirectUri\":\"http://localhost:8080/oauth2-redirect.html\",\"value\":\"cb93bff9-5102-47bb-a959-19fb4d2bef45\"}",
@@ -19,11 +19,23 @@
       "d8ad44c2-8368-4e30-b18e-116307081c1f": "{\"id\":\"d8ad44c2-8368-4e30-b18e-116307081c1f\",\"clientId\":\"3636bcee-2077-4805-b815-0febf5543118\",\"userId\":\"55f269cc-a7af-4425-9bfa-b36358e8bbf8\",\"redirectUri\":\"http://localhost:8080/oauth2-redirect.html\",\"value\":\"10cf3b86-a09e-4482-8818-9b2a572476f8\"}",
       "f9eb048b-32e9-4c7d-842a-8f382465f357": "{\"id\":\"f9eb048b-32e9-4c7d-842a-8f382465f357\",\"clientId\":\"3636bcee-2077-4805-b815-0febf5543118\",\"userId\":\"55f269cc-a7af-4425-9bfa-b36358e8bbf8\",\"redirectUri\":\"http://localhost:8080/oauth2-redirect.html\",\"value\":\"fda7eed9-83ec-45df-84fb-9040dab999ce\"}",
       "4f0bb533-327e-4e74-9edb-69abe43f43ec": "{\"id\":\"4f0bb533-327e-4e74-9edb-69abe43f43ec\",\"clientId\":\"3636bcee-2077-4805-b815-0febf5543118\",\"userId\":\"55f269cc-a7af-4425-9bfa-b36358e8bbf8\",\"redirectUri\":\"http://localhost:8080/oauth2-redirect.html\",\"value\":\"8d19bf45-0cb4-469b-953a-dd3ba4c65105\"}",
-      "7d46064a-0d43-4bb6-8eb5-220cfed1aab6": "{\"id\":\"7d46064a-0d43-4bb6-8eb5-220cfed1aab6\",\"clientId\":\"3636bcee-2077-4805-b815-0febf5543118\",\"userId\":\"55f269cc-a7af-4425-9bfa-b36358e8bbf8\",\"redirectUri\":\"http://localhost:8080/oauth2-redirect.html\",\"value\":\"41ac3a2c-f8dd-4421-b2aa-9017c2f5e6dc\"}"
+      "7d46064a-0d43-4bb6-8eb5-220cfed1aab6": "{\"id\":\"7d46064a-0d43-4bb6-8eb5-220cfed1aab6\",\"clientId\":\"3636bcee-2077-4805-b815-0febf5543118\",\"userId\":\"55f269cc-a7af-4425-9bfa-b36358e8bbf8\",\"redirectUri\":\"http://localhost:8080/oauth2-redirect.html\",\"value\":\"41ac3a2c-f8dd-4421-b2aa-9017c2f5e6dc\"}",
+      "7a51311f-c67c-48b5-b414-c29a8bcc65b8": "{\"id\":\"7a51311f-c67c-48b5-b414-c29a8bcc65b8\",\"clientId\":\"3636bcee-2077-4805-b815-0febf5543118\",\"userId\":\"55f269cc-a7af-4425-9bfa-b36358e8bbf8\",\"redirectUri\":\"http://localhost:8080/oauth2-redirect.html\",\"value\":\"35ad2cbd-7051-4b59-bf1d-c6b6505ba52a\"}",
+      "30b7b7e0-3a1d-43ba-b799-a9d9562e656d": "{\"id\":\"30b7b7e0-3a1d-43ba-b799-a9d9562e656d\",\"clientId\":\"3636bcee-2077-4805-b815-0febf5543118\",\"userId\":\"55f269cc-a7af-4425-9bfa-b36358e8bbf8\",\"redirectUri\":\"http://localhost:8080/oauth2-redirect.html\",\"value\":\"78ac0f9f-af58-45aa-a7f2-2e8ffa52876f\"}",
+      "c89978fa-01aa-4c3a-a935-d5208220243c": "{\"id\":\"c89978fa-01aa-4c3a-a935-d5208220243c\",\"clientId\":\"3636bcee-2077-4805-b815-0febf5543118\",\"userId\":\"55f269cc-a7af-4425-9bfa-b36358e8bbf8\",\"redirectUri\":\"http://localhost:8080/oauth2-redirect.html\",\"value\":\"3b8b6f80-ccef-4cf0-a559-83c8c607f9fd\"}",
+      "861a6a9e-33ea-46f7-8b6d-50fdb17a2fd4": "{\"id\":\"861a6a9e-33ea-46f7-8b6d-50fdb17a2fd4\",\"clientId\":\"3636bcee-2077-4805-b815-0febf5543118\",\"userId\":\"55f269cc-a7af-4425-9bfa-b36358e8bbf8\",\"redirectUri\":\"http://localhost:8080/oauth2-redirect.html\",\"value\":\"8fed4653-5959-4898-aa5d-c390fa03c675\"}",
+      "f566436b-368b-4a31-b268-317a64a0f829": "{\"id\":\"f566436b-368b-4a31-b268-317a64a0f829\",\"clientId\":\"3636bcee-2077-4805-b815-0febf5543118\",\"userId\":\"55f269cc-a7af-4425-9bfa-b36358e8bbf8\",\"redirectUri\":\"http://localhost:8080/oauth2-redirect.html\",\"value\":\"b05f78f3-03c3-4647-81ed-c2f38067dc1a\"}",
+      "a4225b83-a7f2-4e5d-957f-5073b4f59993": "{\"id\":\"a4225b83-a7f2-4e5d-957f-5073b4f59993\",\"clientId\":\"3636bcee-2077-4805-b815-0febf5543118\",\"userId\":\"55f269cc-a7af-4425-9bfa-b36358e8bbf8\",\"redirectUri\":\"http://localhost:8080/oauth2-redirect.html\",\"value\":\"d22b0e03-5970-462c-b817-a742817fccc1\"}",
+      "6e09af5b-c099-4b1c-80e2-88ad162f6f3c": "{\"id\":\"6e09af5b-c099-4b1c-80e2-88ad162f6f3c\",\"clientId\":\"3636bcee-2077-4805-b815-0febf5543118\",\"userId\":\"55f269cc-a7af-4425-9bfa-b36358e8bbf8\",\"redirectUri\":\"http://localhost:8080/oauth2-redirect.html\",\"value\":\"2774f044-aa49-45f7-9e44-24b26ed8bbe0\"}",
+      "6aad8b36-fd6d-464b-8494-c5adf041f56f": "{\"id\":\"6aad8b36-fd6d-464b-8494-c5adf041f56f\",\"clientId\":\"3636bcee-2077-4805-b815-0febf5543118\",\"userId\":\"55f269cc-a7af-4425-9bfa-b36358e8bbf8\",\"redirectUri\":\"http://localhost:8080/api/auth/thirdparty/oauth2/callback\",\"value\":\"cb91f8f0-65f7-4677-a5c7-a8055b24d281\"}",
+      "42c35316-01c8-43e7-b6c0-1f6f93266d19": "{\"id\":\"42c35316-01c8-43e7-b6c0-1f6f93266d19\",\"clientId\":\"3636bcee-2077-4805-b815-0febf5543118\",\"userId\":\"55f269cc-a7af-4425-9bfa-b36358e8bbf8\",\"redirectUri\":\"http://localhost:8080/api/auth/thirdparty/oauth2/callback\",\"value\":\"eb30ab90-b9a2-4c09-a94d-45605901e7d6\"}",
+      "3d117075-1593-4a4b-be74-7a3fa8977c8c": "{\"id\":\"3d117075-1593-4a4b-be74-7a3fa8977c8c\",\"clientId\":\"3636bcee-2077-4805-b815-0febf5543118\",\"userId\":\"55f269cc-a7af-4425-9bfa-b36358e8bbf8\",\"redirectUri\":\"http://localhost:8080/api/auth/thirdparty/oauth2/callback\",\"value\":\"17686fcd-38e0-43d8-9a5a-0209d6141f8d\"}"
     },
     "Token": {
       "6c76a6b6-d0a7-4f84-b349-8895ddfef0b6": "{\"id\":\"6c76a6b6-d0a7-4f84-b349-8895ddfef0b6\",\"clientId\":\"3636bcee-2077-4805-b815-0febf5543118\",\"userId\":\"55f269cc-a7af-4425-9bfa-b36358e8bbf8\",\"value\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMWY2YTVmNDMtMzhhNS00ZjgyLTkyNTctNWYwOTkxODJiNzc4IiwiY2xpZW50SWQiOiIzNjM2YmNlZS0yMDc3LTQ4MDUtYjgxNS0wZmViZjU1NDMxMTgiLCJ1c2VySWQiOiI1NWYyNjljYy1hN2FmLTQ0MjUtOWJmYS1iMzYzNThlOGJiZjgiLCJpYXQiOjE1OTAxNzA1MjQsImV4cCI6MTU5MDc3NTMyNH0.g0_Sa99rMal4H3jaB4szk0AK8DWX_EkR86FHNgVo-r0\"}",
-      "cf164182-ecb9-4876-abbd-e05d675a8c1c": "{\"id\":\"cf164182-ecb9-4876-abbd-e05d675a8c1c\",\"clientId\":\"3636bcee-2077-4805-b815-0febf5543118\",\"userId\":\"55f269cc-a7af-4425-9bfa-b36358e8bbf8\",\"value\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGY3MTk0MmUtNTE4OC00NGEzLWJlNTktMmVlY2I4YWQ1ODcxIiwiY2xpZW50SWQiOiIzNjM2YmNlZS0yMDc3LTQ4MDUtYjgxNS0wZmViZjU1NDMxMTgiLCJ1c2VySWQiOiI1NWYyNjljYy1hN2FmLTQ0MjUtOWJmYS1iMzYzNThlOGJiZjgiLCJpYXQiOjE1OTA1NzU4ODAsImV4cCI6MTU5MTE4MDY4MH0.xzjjft8exulrxkaMeVsVPorAeoi622Y4X8mkBByVWk0\"}"
+      "cf164182-ecb9-4876-abbd-e05d675a8c1c": "{\"id\":\"cf164182-ecb9-4876-abbd-e05d675a8c1c\",\"clientId\":\"3636bcee-2077-4805-b815-0febf5543118\",\"userId\":\"55f269cc-a7af-4425-9bfa-b36358e8bbf8\",\"value\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOGY3MTk0MmUtNTE4OC00NGEzLWJlNTktMmVlY2I4YWQ1ODcxIiwiY2xpZW50SWQiOiIzNjM2YmNlZS0yMDc3LTQ4MDUtYjgxNS0wZmViZjU1NDMxMTgiLCJ1c2VySWQiOiI1NWYyNjljYy1hN2FmLTQ0MjUtOWJmYS1iMzYzNThlOGJiZjgiLCJpYXQiOjE1OTA1NzU4ODAsImV4cCI6MTU5MTE4MDY4MH0.xzjjft8exulrxkaMeVsVPorAeoi622Y4X8mkBByVWk0\"}",
+      "b395513c-a7db-4869-b9ba-879db11dcb8f": "{\"id\":\"b395513c-a7db-4869-b9ba-879db11dcb8f\",\"clientId\":\"3636bcee-2077-4805-b815-0febf5543118\",\"userId\":\"55f269cc-a7af-4425-9bfa-b36358e8bbf8\",\"value\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMGVlOWY0MDMtYTQxMC00OTU5LWIyNWMtNjE3YzdiZWNmN2RlIiwiY2xpZW50SWQiOiIzNjM2YmNlZS0yMDc3LTQ4MDUtYjgxNS0wZmViZjU1NDMxMTgiLCJ1c2VySWQiOiI1NWYyNjljYy1hN2FmLTQ0MjUtOWJmYS1iMzYzNThlOGJiZjgiLCJpYXQiOjE1OTA2ODM4MzcsImV4cCI6MTU5MTI4ODYzN30.ylCeBk643KgnzCqvp-VTQl4AY9gkE0WLxWvArOpWen0\"}",
+      "4d01e2a7-da57-4658-a09b-7df318679580": "{\"id\":\"4d01e2a7-da57-4658-a09b-7df318679580\",\"clientId\":\"3636bcee-2077-4805-b815-0febf5543118\",\"userId\":\"55f269cc-a7af-4425-9bfa-b36358e8bbf8\",\"value\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiYzI5NmNmMzYtOGM0Mi00YTE1LTg0YmItODQ0OWYyM2JjOWM2IiwiY2xpZW50SWQiOiIzNjM2YmNlZS0yMDc3LTQ4MDUtYjgxNS0wZmViZjU1NDMxMTgiLCJ1c2VySWQiOiI1NWYyNjljYy1hN2FmLTQ0MjUtOWJmYS1iMzYzNThlOGJiZjgiLCJpYXQiOjE1OTA2ODQ0OTMsImV4cCI6MTU5MTI4OTI5M30.VLwNuGSd7J5ZWrODWSgXwavh6Oq9zU0Sih9OuwTVsng\"}"
     }
   }
 }

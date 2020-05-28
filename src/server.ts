@@ -1,12 +1,12 @@
-import { ApplicationConfig } from '@loopback/core';
-import { once } from 'events';
+import {ApplicationConfig} from '@loopback/core';
+import {once} from 'events';
 import express from 'express';
 import http from 'http';
-import { AddressInfo } from 'net';
-import { LoopbackOauthApplication } from './application';
+import {AddressInfo} from 'net';
+import {LoopbackOauthApplication} from './application';
 import app from './express/app';
 
-export { ApplicationConfig };
+export {ApplicationConfig};
 
 /**
  * An express server with multiple apps

@@ -1,6 +1,6 @@
-import {SecuritySchemeObject, ReferenceObject} from '@loopback/openapi-v3';
+import { SecuritySchemeObject, ReferenceObject } from '@loopback/openapi-v3';
 
-export const OPERATION_SECURITY_SPEC = [{oAuth2Auth: []}];
+export const OPERATION_SECURITY_SPEC = [{ oAuth2: ["*"] }];
 export type SecuritySchemeObjects = {
   [securityScheme: string]: SecuritySchemeObject | ReferenceObject;
 };
@@ -11,7 +11,7 @@ export const SECURITY_SCHEME_SPEC: SecuritySchemeObjects = {
       authorizationCode: {
         authorizationUrl: '/oauth/authorize',
         tokenUrl: '/oauth/token',
-        scopes: {'*': 'Full Access'},
+        scopes: { '*': 'Full Access' },
       },
     },
   },

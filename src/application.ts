@@ -9,7 +9,7 @@ import {
   RestExplorerComponent,
 } from '@loopback/rest-explorer';
 import { RepositoryMixin } from '@loopback/repository';
-import { RestApplication } from '@loopback/rest';
+import { RestApplication, toInterceptor } from '@loopback/rest';
 import { ServiceMixin } from '@loopback/service-proxy';
 import path from 'path';
 import { MySequence } from './sequence';
@@ -18,8 +18,10 @@ import {
   AuthenticationBindings,
 } from '@loopback/authentication';
 import { SECURITY_SCHEME_SPEC, OPERATION_SECURITY_SPEC } from './utils';
-import { CustomOauth2 } from './authentication-strategy-providers';
+import { CustomOauth2, CustomOauth2ExpressMiddleware } from './authentication-strategy-providers';
 import { Oauth2AuthStrategy } from './authentication-strategies';
+import passport from 'passport';
+import { CustomOauth2Interceptor } from './authentication-interceptors';
 
 /**
  * Information from package.json
@@ -79,6 +81,15 @@ export class LoopbackOauthApplication extends BootMixin(
   setUpBindings(): void {
     // passport strategies
     this.add(createBindingFromClass(CustomOauth2, { key: 'oauth2Strategy' }));
+    this.add(
+      createBindingFromClass(CustomOauth2ExpressMiddleware, {
+        key: 'oauth2StrategyMiddleware',
+      }),
+    );
     this.add(createBindingFromClass(Oauth2AuthStrategy));
+
+    // Express style middleware interceptors
+    this.bind('passport-init-mw').to(toInterceptor(passport.initialize()));
+    this.bind('passport-oauth2').toProvider(CustomOauth2Interceptor);
   }
 }

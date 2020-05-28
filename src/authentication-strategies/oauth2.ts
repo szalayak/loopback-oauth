@@ -1,11 +1,11 @@
-import { AuthenticationStrategy, asAuthStrategy } from '@loopback/authentication';
-import { StrategyAdapter } from '@loopback/authentication-passport';
-import { Strategy } from 'passport-oauth2';
-import { RedirectRoute, Request } from '@loopback/rest';
-import { UserProfile } from '@loopback/security';
-import { User } from '../models';
-import { inject, bind, extensions, Getter } from '@loopback/core';
-import { PassportAuthenticationBindings, mapProfile } from './types';
+import {AuthenticationStrategy, asAuthStrategy} from '@loopback/authentication';
+import {StrategyAdapter} from '@loopback/authentication-passport';
+import {Strategy} from 'passport-oauth2';
+import {RedirectRoute, Request} from '@loopback/rest';
+import {UserProfile} from '@loopback/security';
+import {User} from '../models';
+import {inject, bind, extensions, Getter} from '@loopback/core';
+import {PassportAuthenticationBindings, mapProfile} from './types';
 
 @bind(asAuthStrategy)
 export class Oauth2AuthStrategy implements AuthenticationStrategy {

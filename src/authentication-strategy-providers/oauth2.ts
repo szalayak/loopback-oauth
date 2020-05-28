@@ -1,5 +1,4 @@
-import {inject, Provider, BindingScope, bind} from '@loopback/core';
-import {UserServiceBindings} from '../services';
+import { inject, Provider, BindingScope, bind } from '@loopback/core';
 import {
   Strategy as OAuth2Strategy,
   StrategyOptions as OAuth2StrategyOptions,
@@ -9,14 +8,14 @@ import {
   profileFunction,
 } from '../authentication-strategies/types';
 
-@bind.provider({scope: BindingScope.SINGLETON})
+@bind.provider({ scope: BindingScope.SINGLETON })
 export class CustomOauth2 implements Provider<OAuth2Strategy> {
   strategy: OAuth2Strategy;
 
   constructor(
     @inject('customOAuth2Options')
     public oauth2Options: OAuth2StrategyOptions,
-    @inject('authentication.oauth2.profile.function', {optional: true})
+    @inject('authentication.oauth2.profile.function', { optional: true })
     public profileFn: profileFunction,
   ) {
     if (profileFn) {
